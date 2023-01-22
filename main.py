@@ -20,7 +20,7 @@ class Video(Resource):
     """
     def get(self, video_id):
         """
-        Get method for Api requests
+        GET method for Api requests
         """
         if video_id == 'all':
             return videos, 200
@@ -29,12 +29,24 @@ class Video(Resource):
         else:
             return videos[video_id], 200
 
+    def post(self, video_id):
+        """
+        POST method for Api requests
+        """
+        if video_id in videos:
+            abort(http_status_code=409, message=f'Video with {video_id} id already exists')
+        else:
+            args = parser.parse_args()
+            new_video = {'title': args['title']}
+            videos[video_id] = new_video
+            return {video_id: videos[video_id]}, 200
+
     def put(self, video_id):
         """
-        Put method for Api requests
+        PUT method for Api requests
         """
         if video_id not in videos:
-            abort(http_status_code=404, message=f'Video {video_id} not found!')
+            abort(http_status_code=40, message=f'Video {video_id} not found!')
         else:
             args = parser.parse_args()
             new_video = {'title': args['title']}
@@ -43,7 +55,7 @@ class Video(Resource):
 
     def delete(self, video_id):
         """
-        Delete method for Api request
+        DELETE method for Api request
         """
         if video_id not in videos:
             abort(http_status_code=404, message=f'Video {video_id} not found!')
